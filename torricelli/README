@@ -1,0 +1,21 @@
+In order to get the data for the model, you must 
+1) Open the LeakyBucket.m file in Matlab and run it:
+
+>> LeakyBucket
+
+It will output a bunch of text files that will be 
+needed to be able to produce the latex output.
+
+2) The second step is to produce the latex output, 
+using a syntax similar to:
+
+$ pdflatex LeakyBucket.m
+
+This will produce the .pdf file for the full 
+report.
+
+Any questions, feel free to email me at
+Andrew <dot> Pound <at> aggiemail <dot> USU <dot edu.
+
+Thanks,
+Andrew
