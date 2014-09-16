@@ -116,8 +116,7 @@ The data that we collected can be seen in table \ref{tab:data}.
 
 \begin{matlabc}
 %}
-%%
-
+% The data from our run....
 h = [12 11 10 9 8 7 6 5 4 3 2 1 0];
 t= [nan 0.82 1.46 2.16 3.19 4.4  5.57 6.67 8.09  9.43 11.3  13.49 16.83]; 
 t = [t; [nan 1.13 2.34 3.37  4.4 5.65 6.73 8.16 8.72 11.33 13.53 16.78 19.27]];
@@ -136,17 +135,16 @@ fclose(fid);
 
 %{
 \end{matlabc}
+
 We estimated $a$ to be around
 $.275 cm^2$, and the cross sectional area to be $30.88 cm^2$. We
 assumed $g$ was the standard physics class value of $9.80 cm/s^2$.   
 
-In the graph below we show the results of three models, one of which
-is Torrecelli's Law from above, and two others derived using
-dimensional analysis. 
-
-\begin{matlabc}
+{\singlespacing
+\begin{lstlisting}
 %} 
 T = nanmean(t);
+tmod = 0:.01:T(end);
 
 g = 9.81; % m/sec
 g = g*100; % cm/sec
@@ -170,6 +168,13 @@ grid on
 ylabel('height')
 xlabel('time')
 legend('Torricelli''s Law','Average data')
+%{ 
+\end{lstlisting}
+} %End singlespacing
+
+
+\begin{matlabc}
+%}
 
 % Output to .eps and .pdf:
 print(f1, '-depsc2', 'torr.eps')
@@ -177,41 +182,250 @@ system('ps2pdf -dEPSCrop torr.eps')
 
 %{ 
 \end{matlabc}
-%% Figure here...
 
-First model:   
-\begin{align}
-  c_1 &=  1.3374&  c_2 &= -1.3898 &  c_3 &= 0.2390
-\end{align}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.8\linewidth]{torr}
+  \caption{The comparison to the average of our runs and what Torrecelli's law predicts.}
+  \label{fig:torr}
+\end{figure}
+In figure \ref{fig:torr}, we show the average of our data runs and
+what Torrecelli's Law would predict.  As can be seen, there seems to
+be a decent discrepancy between the model and the measurements.  So,
+maybe we can take a look at the model and find a better model.
+
+\section{Dimensional Analysis}
+
+So, enter dimensional analysis.  We first identify our parameters that
+we are working with and form the \emph{dimension matrix}.  We end up
+with the following
 \begin{equation}
-  H = c_1h_0+c_2\left(\frac{t^2g}{h_0}\right)^{c_3}  
+\begin{split}
+    &\qquad\overbrace{
+    \begin{matrix}
+      h_0 & h & a & A & t & g
+    \end{matrix}}^{\text{parameters}}\\
+  \Abf &= \left.
+  \begin{bmatrix}
+    1 & 1& 2 & 2 & 0 & 1\\
+    0 & 0 &0 & 0 & 1 &-2
+  \end{bmatrix} 
+  \begin{matrix}
+    L \\ T 
+  \end{matrix}\right\} \text{dimensions}
+\end{split}
+\end{equation}
+The rank of $\Abf$ is 2, thus we have 4 independent dimensionless
+quantities ($\Pi_i$) that we can use.
+In order to make things easier, we kept the constant parameters all in
+their own $\Pi_i$'s. Thus, we found the dimensionless quantities
+\begin{align}
+  \Pi_1 &=
+  \begin{bmatrix}
+    -1 \\ 1 \\ 0 \\ 0 \\ 0 \\ 0
+  \end{bmatrix} = \frac{h}{h_0}
+  & \Pi_2 &= 
+  \begin{bmatrix}
+    0 \\ 0\\ 2 \\ -2 \\0 \\0
+  \end{bmatrix} = \frac{a}{A^2}
+  & \Pi_3 &= 
+  \begin{bmatrix}
+    -1 \\ 0 \\ 0\\ 0\\ 2\\ 1
+  \end{bmatrix} = \frac{t^2g}{h_0}
+   & \Pi_4 &= 
+   \begin{bmatrix}
+     2 \\ 0 \\ 1\\ -2 \\ 0 \\0
+   \end{bmatrix} = \frac{h_0^2a}{A^2}.
+\end{align}
+We will assume
+\begin{equation}
+  f(\Pi_1)= 0, \quad \text{where} \quad \Pi_1 = g\left(\Pi_2,\Pi_3,\Pi_4\right).
+\end{equation}
+Then, let us say that $g(\dot)$ can be written as
+\begin{equation}
+  g\left(\Pi_2,\Pi_3,\Pi_4\right) = G\left(\Pi_2\right) + H\left(\Pi_3\right) + I\left(Pi_4\right),
+\end{equation}
+This leads us to the equation
+\begin{equation}
+\begin{split}
+  \Pi_1 &= G\left(\Pi_2\right) + H\left(\Pi_3\right) + I\left(\Pi_4\right),\\
+  h &= h_o\left(G\left(\Pi_2\right) + H\left(\Pi_3\right) + I\left(\Pi_4\right)\right)\\
+  &= G'\left(\Pi_2\right) + H'\left(\Pi_3\right) + I'\left(\Pi_4\right)\\
+  & = \underbrace{G'\left(\frac{a}{A^2}\right)}_{\text{constant}} +
+  H'\left(\frac{t^2g}{h_0}\right)  +
+  \underbrace{I'\left(\frac{h_0^2a}{A^2}\right)}_{\text{constant}}\\ 
+  & = C + H'\left(\frac{t^2g}{h_0}\right).
+\end{split}
 \end{equation}
 
-Second model: 
-\begin{align}
-  c_1 &= 1.0180 &  c_2 &= 0.0025&  c_3 &=  0.6833
-\end{align}
-
-\begin{equation}
-  H = c_1h_0 e^{-c_2\left(\frac{t^2g}{h_0}\right)}
-\end{equation}
-
-The other dimensionless quantities only include the hole area, the
-cross dimensional area, and the initial height, and since those
-quantities are all fixed as far as this experiment is concerned, I
-``wrapped'' them up into the constants of the equations above so that I
+The other dimensionless quantities only include the hole area $a$, the 
+cross dimensional area $A$, and the initial height $h_0$, and since those
+quantities are all fixed as far as this experiment is concerned, we
+``wrapped'' them up into the constants of the equations above so that we
 only effectively had to deal with one dimensional quantity,
-$t^2\frac{g}{h_0}$. 
+$\Pi_3 = t^2\frac{g}{h_0}$. 
 
-The first model fits the data points the best, but its value at $t=0$ is
-around $16$, so not so good, and also it dips below zero for its end
-behavior, which is obviously not correct. 
+\subsection{A fit}
+Thus, we postulate that we can use a model that looks like
+\begin{equation}
+  h = c_1 + c_2\sqrt{\frac{t^2g}{h_0}}
+\end{equation}
+or even more generally,
+\begin{equation}
+   h = c_1 + c_2\left(\frac{t^2g}{h_0}\right)^{c_3}.
+\end{equation}
 
-The second model has a better initial value, of about $12$, and better
-end behavior than the first model, though it does not match each point
-as well as the first model. 
+{\singlespacing
+\begin{lstlisting}
+%}
 
+tor = (sqrt(h0)-a/A*sqrt(g/2).*tmod).^2; % torrecelli's model
+
+% height = constant1 + constant2*sqrt(tmod.^2*g/h0): constant1 = c(1),
+% constant 2 = c(2);
+
+F = @(c,xdata) c(1)*h0 + c(2)*(xdata.^2*g/h0).^c(3);
+c0 = [5,-1/16,1/2];
+
+c = lsqcurvefit(F,c0,T-T(1),h);
+
+
+fig = figure(1); % plotting everything
+clf
+hold on
+plot(T-T(1),h,'ro',tmod,tor,'b--',tmod,F(c,tmod),'g-')
+title('Models of the Leaky Bucket')
+grid on
+xlabel('Time (s)')
+ylabel('Height (cm)')
+legend('Data (mean of runs)','Torricelli''s Model','Model 1')
+%{
+\end{lstlisting}
+} % End singlespacing
+\begin{matlabc}
+%}
+
+% Output to .eps and .pdf:
+print(fig, '-depsc2', 'model.eps')
+system('ps2pdf -dEPSCrop model.eps')
+
+% output the coefficients found. 
+fid = fopen('coeffs1.tex','w');
+fprintf(fid,'%s',sprintf('%g & %g & %g \\\\',c));
+fclose(fid);
+%{
+\end{matlabc}
+Figure \ref{fig:mod1} shows the fit of this model compared to
+Torrecelli's Law and the mean of the data collected.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.8\linewidth]{model}
+  \caption{The fit of model 1 to the data compared to Torrecelli's
+    Law.  The mean of the collected data is shown also.} 
+  \label{fig:mod1}
+\end{figure}
+We can see that this fit actually does better at predicting the data. 
+The coefficients found are shown in table \ref{tab:mod1}.
+\begin{table}[hb]
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    $c_1$ &    $c_2$ &    $c_3$ \\
+    \midrule
+    \input{coeffs1.tex}
+    \bottomrule
+  \end{tabular}
+  \caption{The coefficients from model 1, as found in \matlab .}
+  \label{tab:mod1}
+\end{table}
+
+\subsection{A different fit}
+The model above matches very well with the data, but doesn't seem to
+capture the end result and slow down all that well.  We tried
+a different fit to see if we could come up with something better.
+This time we postulated the model as
+\begin{equation}
+  H = c_1h_0 e^{-c_2\left(\frac{t^2g}{h_0}\right)^{c_3}}
+\end{equation}
+Following the same procedure as before, we obtain the fit shown in
+figure \ref{fig:mod2}.
+{\singlespacing
+\begin{lstlisting}
+%}
+
+tor = (sqrt(h0)-a/A*sqrt(g/2).*tmod).^2; % torrecelli's model
+
+% height = constant1 + constant2*sqrt(tmod.^2*g/h0): constant1 = c(1),
+% constant 2 = c(2);
+
+F2 = @(c,xdata) c(1)*h0.*exp(-c(2)*(xdata.^2*g/h0).^c(3));
+% c02 = [5,-1/16,1/2]; 
+c02 = [ 1.0180, 0.0025, 0.6833]; % A lucky first guess... ;)
+
+%c2 = lsqcurvefit(F2,c02,T-T(1),h);
+c2 = nlinfit(T-T(1), h, F2, c02);
+
+fig = figure(1); % plotting everything
+clf
+hold on
+plot(T-T(1),h,'ro',tmod,tor,'b--',tmod,F(c,tmod),'g-',tmod,F2(c2,tmod),'m-')
+title('Models of the Leaky Bucket')
+grid on
+xlabel('Time (s)')
+ylabel('Height (cm)')
+legend('Data (mean of runs)','Torricelli''s Model','Model 1','Model 2')
+%{
+\end{lstlisting}
+} % End singlespacing
+\begin{matlabc}
+%}
+
+% Output to .eps and .pdf:
+print(fig, '-depsc2', 'model2.eps')
+system('ps2pdf -dEPSCrop model2.eps')
+
+% output the coefficients found. 
+fid = fopen('coeffs2.tex','w');
+fprintf(fid,'%s',sprintf('%g & %g & %g \\\\',c2));
+fclose(fid);
+%{
+\end{matlabc}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.8\linewidth]{model2}
+  \caption{The fit of Models 1 and 2 to the data compared to
+    Torrecelli's     Law.  The mean of the collected data is shown
+    also.}  
+  \label{fig:mod2}
+\end{figure}
+The coefficients for the second model can be seen in table
+\ref{tab:mod2}.
+\begin{table}[hb]
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    $c_1$ &    $c_2$ &    $c_3$ \\
+    \midrule
+    \input{coeffs2.tex}
+    \bottomrule
+  \end{tabular}
+  \caption{The coefficients from model 1, as found in \matlab .}
+  \label{tab:mod2}
+\end{table}
+
+The first model fits the data points the best, but also it dips below
+zero for its end behavior, which is obviously not correct. 
+
+The second model also seems to fit the data well and has better
+end behavior than the first model.
+
+\section{Conclusion}
+Both of the proposed models fit the data better than Torrecelli's Law,
+suggesting that the are better for the modeling of this
+experiment. Thus, dimensional analysis proves to be a valid method to
+discover a different model that better fits the measured data in this
+experiment. 
 
 
 
