@@ -95,6 +95,57 @@ liquid making up the drop.
   terms of $h$ and $g$, the acceleration due to gravity. Assume the
   drop starts with zero velocity.
 
+\begin{matlabc}
+%}
+% Let's plot the data like it is in the assignment...
+d = [10 0; 46 11; 49 9; 61 13; 89 21; 91 22; 123 23; 130 31; 161 40; 199 48];
+f1 = figure;
+set(f1,'outerposition',[914 1023 529 300]);
+plot(d(:,1),d(:,2),'ro','markersize',7),grid on
+ylabel('Number of Points')
+xlabel('Height (cm)')
+
+print(f1,'-depsc2','figb.eps')
+system('ps2pdf -dEPSCrop figb.eps')
+%{
+\end{matlabc}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\linewidth]{figb}
+    \caption{ }
+    \label{fig:b}
+  \end{figure}
+
+\begin{matlabc}
+%}
+x = d(:,1);
+y = d(:,2);
+xx = 0:200;
+yy = (x'*x)^(-1)*x'*y.*xx;
+f2 = figure;
+plot(d(:,1),d(:,2),'ro','markersize',7)
+hold on
+plot(xx,yy)
+grid on
+
+% Second fit: with y intercept...
+x2 = [x ones(size(x))];
+xx2 = [xx; ones(size(xx))];
+yy2 = ((x2'*x2)\(x2'*y))'*xx2;
+
+hold on 
+plot(xx2(1,:),yy2,'m')
+
+legend('Data','lin-fit y(0)=0','lin-fit y(0)=b',...
+       'Location','southeast')
+ylabel('Number of Points')
+xlabel('Height (cm)')
+
+print(f2,'-depsc2','figc.eps')
+system('ps2pdf -dEPSCrop figc.eps')
+%{
+\end{matlabc}
+
 
 \end{enumerate}
 
