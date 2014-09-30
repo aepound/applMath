@@ -97,24 +97,38 @@ liquid making up the drop.
 
 \begin{matlabc}
 %}
-% Let's plot the data like it is in the assignment...
+%% Let's plot the data like it is in the assignment...
 d = [10 0; 46 11; 49 9; 61 13; 89 21; 91 22; 123 23; 130 31; 161 40; 199 48];
 f1 = figure;
+%set(f1,'outerposition',[894 1003 549 340]);
 set(f1,'outerposition',[914 1023 529 300]);
-plot(d(:,1),d(:,2),'ro','markersize',7),grid on
-ylabel('Number of Points')
-xlabel('Height (cm)')
+%set(f1,'paperposition',[914 1023 529 300]);
+%set(f1,'paperposition',[1 1 530 300]);
 
-print(f1,'-depsc2','figb.eps')
+plot(d(:,1),d(:,2),'ro','markersize',7),grid on
+ylabel('Number of Points','fontsize',14)
+xlabel('Height (cm)','fontsize',14)
+a1 = gca;
+set(a1,'ytick',[0:10:50])
+set(a1,'xtick',[0:50:200])
+
+print(f1,'-depsc2','-loose','figb.eps')
 system('ps2pdf -dEPSCrop figb.eps')
 %{
 \end{matlabc}
   \begin{figure}[h]
     \centering
-    \includegraphics[width=0.3\linewidth]{figb}
+    \includegraphics[width=0.5\linewidth,height=.25\textheight]{figb}
     \caption{ }
     \label{fig:b}
   \end{figure}
+
+\item The data in Figure (b) show a piecewise linear dependence on
+  $h$, specifically, $N$ can be described as a continuous function
+  made up of two linear segments. Use this, and your result from part
+  B, to find the unknown function in part A. In the experiments, $r =
+  3.6 mm$, $\rho = 1.1014 gram/cm^3$ and $\sigma = 50.5 dyn/cm$.
+
 
 \begin{matlabc}
 %}
@@ -145,6 +159,15 @@ print(f2,'-depsc2','figc.eps')
 system('ps2pdf -dEPSCrop figc.eps')
 %{
 \end{matlabc}
+
+\item According to your result from part C, what must the initial
+  height of the drop be to produce at least 80 points?
+
+\item According to your result from part C, how many points are
+  generated for a drop of mercury when $h = 200 cm$? Assume $r = 3.6
+  mm$, $\rho = 13.5 gram/cm^3$, and $\sigma = 435 dyn/cm$.
+
+
 
 
 \end{enumerate}
