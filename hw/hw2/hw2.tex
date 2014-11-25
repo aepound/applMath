@@ -1,0 +1,327 @@
+%{
+\documentclass{article}
+\input{../hw1/commonheader}
+\usepackage{comment}
+
+\usepackage{enumitem}
+\newenvironment{matlabc}{}{}
+\newenvironment{octavec}{}{}
+\excludecomment{matlabc}
+%\newenvironment{matlabv}{\verbatim}{\endverbatim}
+%\newenvironment{octavev}{\verbatim}{\endverbatim}
+
+
+% ******** For code: ******************
+\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+% ******** Define the language: *******
+\lstdefinelanguage{matlabfloz}{%
+	alsoletter={...},%
+	morekeywords={% 						% keywords
+	break,case,catch,continue,elseif,else,end,for,function,global,%
+	if,otherwise,persistent,return,switch,try,while,...,
+        classdef,properties,methods},%
+	comment=[l]\%,% 						% comments
+	morecomment=[l]...,% 					% comments
+	morestring=[m]',%   						% strings 
+}[keywords,comments,strings]%
+\lstdefinestyle{matlab}{language=matlabfloz,							
+		keywordstyle=\color[rgb]{0,0,1},					
+		commentstyle=\color[rgb]{0.133,0.545,0.133},	% comments
+		stringstyle=\color[rgb]{0.627,0.126,0.941},	% strings
+		numbersep=3mm, numbers=left, numberstyle=\tiny% number style
+}
+% ******** Set the style: **************
+\lstset{style=matlab}
+
+\begin{matlabc}
+%}
+% Start some Matlabe startup stuffs:
+clear all
+close all
+
+% Record version of MATLAB/Octave
+a = ver('octave');
+if length(a) == 0
+    a = ver('matlab');
+end
+fid = fopen('vers.tex', 'w');
+fprintf(fid, [a.Name ' version ' a.Version]);
+fclose(fid);
+
+% Record computer architecture.
+fid = fopen('computer.tex', 'w');
+fprintf(fid, ['\\verb+' computer '+']);
+fclose(fid);
+
+% Record date of run.
+fid = fopen('date.tex', 'w');
+fprintf(fid, datestr(now, 'dd/mm/yyyy'));
+fclose(fid);
+
+%{
+\end{matlabc}
+\title{MATH 5410: Homework 2}             
+\author{Andrew Pound}
+%\date{\input{date.tex}}
+
+\begin{document}
+\maketitle
+
+%Due on November 25: pg 166-168
+%Exercises: 4,5,7(e),9
+
+
+\section*{Problem 4}
+Show that the first variation of $\delta J (y_0, h)$ satisfies the
+homogeneity condition
+\begin{equation*}
+  \delta J(y_0, \alpha h) = \alpha\delta J(y_0, h), \quad \alpha \in
+  \mathbb{R}. 
+\end{equation*}
+
+\subsection*{My Answer}
+\begin{equation*}
+  \begin{split}
+    \delta J(y_0, \alpha h) 
+    &= \frac{d}{d\epsilon}J(y_0 + \epsilon (\alpha h))|_{\epsilon =0}\\ 
+    & = J'(y_0 + \epsilon(\alpha h))\cdot(\alpha h)|_{\epsilon =0}\\ 
+    & = \alpha \underbrace{\left(hJ'(y_0 +  \epsilon(\alpha h))|_{\epsilon
+        =0}\right)}_{\delta J(y_0,h)}\\
+    &= \alpha\delta J(y_0, h). 
+  \end{split}
+\end{equation*}
+In the thrid line above, we can say that the term in the parenthesis
+is $\delta J(y_0,h)$, because when $\epsilon \rightarrow 0$, then the
+term $\epsilon\alpha h \rightarrow 0$, just like the term $\epsilon h$
+would.
+
+\section*{Problem 5}
+A functional $J: V \rightarrow \mathbb{R}$, where $V$ is a normed
+linear space, is \emph{linear} if 
+\begin{equation*}
+  J(y_1 + y_2) = J(y_1) + J(y_2), \quad y_1,y_2 \in V
+\end{equation*}
+and
+\begin{equation*}
+  J(\alpha y_1) = \alpha J(y_1), \quad \alpha\in \mathbb{R}, \quad y_1
+  \in V.
+\end{equation*}
+Which of the following functionals on $C^1[a,b]$ are linear?
+\begin{enumerate}[label={(\alph*)}]
+\item $ J(y) = \int_a^b yy' dx$.
+\item[] Check additivity:
+\begin{equation*}
+    \begin{split}
+      J(y_1+y_2) &= \int_a^b(y_1 + y_2)(y_1 + y_2)' \, dx \\
+      &= \int_a^b y_1y_1' + y_1y_2' + y_2y_1' + y_2y_2' \, dx\\
+      &= \underbrace{\int_a^b  y_1y_1'\,dx  + \int_a^b y_2y_2' \,
+        dx}_{J(y_1) + J(y_2)} + \int_a^b
+      y_1y_2' + y_2y_1'\, dx\\
+      & \neq J(y_1) + J(y_2).      
+    \end{split}
+  \end{equation*}
+  Thus, this is not linear.
+\item $ J(y) = \int_a^b ((y')^2 + 2y) dx$.
+\item[]Check additivity:
+  \begin{equation*}
+    \begin{split}
+      J(y_1 + y_2) &= 
+      \int_a^b ((y_1' + y_2')^2 + 2y_1 + 2y_2)\, dx\\
+      & = \int_a^b y_1'y_1' + y_1'y_2' + y_2'y_1' + y_2'y_2' + 2y_1 +
+      2y_2\, dx\\
+      &= \underbrace{\int_a^b  y_1'y_1' + 2y_1\,dx  + \int_a^b
+        y_2'y_2'  + 2y_2 \,dx}_{J(y_1) + J(y_2)} + \int_a^b
+      y_1'y_2' + y_2'y_1'\, dx\\
+    \end{split}
+  \end{equation*}
+Thus, this is not linear, either.
+\item $ J(y) = e^{y(a)}$.
+\item[]Check additivity:
+  \begin{equation*}
+    \begin{split}
+      J(y_1 + y_2) &= e^{y_1(a) + y_2(a)}\\
+      &= e^{y_1(a)}e^{y_2(a)}\\
+      & \neq e^{y_1(a)} + e^{y_2(a)}.
+    \end{split}
+  \end{equation*}
+Not linear.
+\item $ J(y) = \int_a^b \int_a^b K(x,t) y(x) y(t)\, dx\, dt$.
+\item[]Check additivity:
+  \begin{equation*}
+    \begin{split}
+      J(y_1 + y_2) & = \int_a^b \int_a^b K(x,t) (y_1(x) + y_2(x))( y_1(t)
+      + y_2(t))\, dx\, dt\\
+      & = \int_a^b \int_a^b K(x,t) \left(y_1(x)y_1(t)  + y_2(x)y_1(t)
+        + y_1(x)y_2(t) + y_2(x)y_2(t)\right)\, dx\, dt\\
+      &=  \underbrace{\int_a^b \int_a^b K(x,t)y_1(x)y_1(t)\, dx\, dt  +
+        \int_a^b \int_a^b K(x,t)y_2(x)y_2(t)\, dx\, dt}_{J(y_1) + J(y_2)}\\
+      &\quad+ \int_a^b \int_a^b K(x,t)y_2(x)y_1(t)\, dx\, dt
+        + \int_a^b \int_a^b K(x,t)y_1(x)y_2(t)\, dx\, dt
+    \end{split}
+  \end{equation*}
+Thus, it's not linear.
+\item $ J(y) = \int_a^b y \sin(x) dx$.
+\item[]Check additivity:
+  \begin{equation*}
+    \begin{split}
+      J(y_1 + y_2) & = \int_a^b (y_1 + y_2)  \sin(x) dx\\
+      & = \int_a^b y_1 \sin(x) dx + \int_a^b y_2 \sin(x) dx\\
+      & = J(y_1) + J(y_2).
+    \end{split}
+  \end{equation*}
+Now, we can check the scaling property:
+\begin{equation*}
+  \begin{split}
+    J(\alpha y) = \int_a^b (\alpha y) \sin(x) dx = \alpha \int_a^b y
+    \sin(x) dx = \alpha J(y).
+  \end{split}
+\end{equation*}
+Thus, we can say that this functional is indeed linear.
+\item $ J(y) = \int_a^b (y')^2 dx + G(y(b)),$ where $G$ is a
+  differential function.
+\item[]Check additivity:
+  \begin{equation*}
+    \begin{split}
+      J(y_1 + y_2) &= \int_a^b (y_1' + y_2')^2 dx + G(y_1(b) + y_2(b))\\
+      & = \int_a^b y_1'(x)y_1'(t)  + y_2'(x)y_1'(t)
+        + y_1'(x)y_2'(t) + y_2'(x)y_2'(t) dx + G(y_1(b) + y_2(b))
+    \end{split}
+  \end{equation*}
+Compare this with 
+\begin{equation*}
+  \begin{split}
+    J(y_1) + J(y_2) & = \int_a^b (y_1')^2 dx + G(y_1(b)) + \int_a^b (y_2')^2 dx + G(y_2(b)),
+  \end{split}
+\end{equation*}
+and it can be seen that $G$ would definitely need to be linear for
+$J$ to be linear, but we have no guarantee of that.  In addition, the
+quadratic under the integral is \emph{ont} linear, so this functional
+is not linear, either.
+\end{enumerate}
+
+
+\section*{Problem 7 (e)}
+Compute the first variation of the functionals on $C^1[a,b]$ given in
+Exercise 5(e)
+
+\begin{enumerate}
+\item[(e)] $ J(y) = \int_a^b y \sin(x) dx$.
+\item[]\begin{equation*}
+  \begin{split}
+    \delta J(y_0, \alpha h) 
+    &= \frac{d}{d\epsilon}J(y_0 + \epsilon h)|_{\epsilon
+      =0}\\ 
+    & = \frac{d}{d\epsilon}\left.\left(\int_a^b (y_0 + \epsilon h)
+        \sin(x) dx\right)\right|_{\epsilon = 0}\\
+    & =  \frac{d}{d\epsilon}\left.\left( 
+      \int_a^b y_0 \sin(x) dx + 
+      \epsilon \int_a^b  h \sin(x) dx\right)
+      \right|_{\epsilon = 0}\\
+    & =  \left.\left(\int_a^b  h \sin(x) dx \right)\right|_{\epsilon =
+      0}\\
+    & = h \int_a^b  \sin(x) dx\\
+    & = h\left(-\cos(b) + \cos(a)\right)
+  \end{split}
+\end{equation*}
+
+\end{enumerate}
+
+
+\section*{Problem 9}
+The second variation of a functional $J: A \rightarrow \mathbb{R}$ at
+$y_0 \in A$ in the direction $h$ is defined by 
+\begin{equation*}
+  \delta^2J(y_0,h) \equiv \frac{d^2}{d\epsilon^2}J(y_0 + \epsilon
+  h)|_{\epsilon = 0}.
+\end{equation*}
+Find the second variation of the functional 
+\begin{equation*}
+  J(y) = \int_0^1 (xy'^2 + y \sin(y')) dx,
+\end{equation*}
+where $y \in C^2[0,1].$
+
+\subsection*{My Answer}
+
+
+\begin{equation*}
+  \begin{split}
+    J(y_0 + \epsilon h) & = \int_0^1 (x(y_0 + \epsilon h)'^2 + (y_0 +
+    \epsilon h) \sin((y_0 + \epsilon h)')) dx \\
+    & = \int_0^1 (x(y_0' + \epsilon h')^2 + (y_0 +
+    \epsilon h) \sin(y_0' + \epsilon h'))\, dx \\
+    &= \int_0^1 x(y_0'y_0' + 2\epsilon(y_o'h') + \epsilon^2(h')^2)
+    dx 
+    + \int_0^1 y_0\sin(y_0' + \epsilon h') dx
+    + \epsilon\int_0 ^1 h\sin(y_0' + \epsilon h') dx \\
+    &= \int_0^1 x(y_0')^2dx  + \int_0^1 y_0\sin(y_0' + \epsilon h')\, dx
+    + \epsilon\left( 2\int_0^1 y_o' h'\, dx + \int_0 ^1 h\sin(y_0'
+      + \epsilon h') dx\right) 
+    + \epsilon^2\int_0^1 (h')^2dx  
+\end{split}
+\end{equation*}
+Now, Let's take the derivatives.
+\begin{equation*}
+  \begin{split}
+   \frac{d}{d\epsilon}J(y_0 + \epsilon h) 
+   &= \frac{d}{d\epsilon}\left[  \int_0^1 y_0\sin(y_0' + \epsilon h') dx
+    + 2\epsilon \int_0^1 y_o' h'\, dx +\epsilon \int_0 ^1 h\sin(y_0'
+      + \epsilon h')\, dx 
+    + \epsilon^2\int_0^1 (h')^2dx  \right]\\
+  &= 2\int_0^1 y_o' h'\, dx +
+  \int_0^1 y_0\cos(y_0' + \epsilon h')\cdot h'\, dx
+   +  \int_0 ^1 h\sin(y_0'
+      + \epsilon h')\, dx\\
+  &\quad  + \epsilon\left(\int_0^1 hh'\cos(y_0' +
+      \epsilon h') dx\right) +2\epsilon \int_0^1 (h')^2 dx 
+  \end{split}
+\end{equation*}
+
+\begin{equation*}
+  \begin{split}
+     \frac{d^2}{d\epsilon^2}J(y_0 + \epsilon h) 
+     & = \frac{d}{d\epsilon}\left[2\int_0^1 y_o' h'\, dx +
+  \int_0^1 y_0\cos(y_0' + \epsilon h')\cdot h'\, dx
+   +  \int_0 ^1 h\sin(y_0'
+      + \epsilon h')\, dx \right.\\
+  &\quad\left.  + \epsilon\left(\int_0^1 hh'\cos(y_0' +
+      \epsilon h')\, dx\right) +2\epsilon \int_0^1 (h')^2\, dx\right] \\
+  &= 0 - \int_0^1 y_0 (h')^2\sin(y_0' + \epsilon h') \,dx + \int_0^1
+  hh'\cos(y_0' + \epsilon h')\,dx\\
+  &\quad +\int_0^1 hh'\cos(y_0' +
+      \epsilon h')\, dx - \epsilon \left(\int_0^1 h(h')^2\sin(y_0' +
+      \epsilon h')\, dx\right) + 2\int_0^1(h')^2\, dx.
+  \end{split}
+\end{equation*}
+Setting $\epsilon = 0$, yields
+\begin{equation*}
+  \begin{split}
+     \left. \frac{d^2}{d\epsilon^2}J(y_0 + \epsilon h)\right|_{\epsilon = 0} &=
+ - \int_0^1 y_0 (h')^2\sin(y_0') \,dx + \int_0^1 hh'\cos(y_0')\,dx
+ +\int_0^1 hh'\cos(y_0')\, dx + 2\int_0^1(h')^2\, dx\\
+ &= - \int_0^1 y_0 (h')^2\sin(y_0') \,dx + 2\int_0^1 hh'\cos(y_0')\,dx
++ 2\int_0^1(h')^2\, dx\\
+  \end{split}
+\end{equation*}
+
+
+
+
+
+
+
+\end{document}
+
+
+= -\int_0^1 y_0(h')^2\sin(y_0' + \epsilon h')\, dx  + 2 \int_0^1
+  hh' dx \\
+  &\quad + \left(\int_0^1hy_0' + y_0h'\, dx +  \int_0 ^1 h\sin(y_0'
+      + \epsilon h') dx\right)\left(-\int_0^1h(h')^2\sin(y_0' +
+      \epsilon h')\, dx\right)\\
+  &\quad + 
+  \left(0 + \int_0^1hh'\cos(y_0' + \epsilon h')\, dx\right)
+\left(\int_0^1 hh'\cos(y_0' +
+      \epsilon h') dx\right)
+
+
+%}
