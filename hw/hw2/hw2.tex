@@ -220,8 +220,8 @@ Exercise 5(e)
       \right|_{\epsilon = 0}\\
     & =  \left.\left(\int_a^b  h \sin(x) dx \right)\right|_{\epsilon =
       0}\\
-    & = h \int_a^b  \sin(x) dx\\
-    & = h\left(-\cos(b) + \cos(a)\right)
+    & =  \int_a^b h \sin(x) dx\\
+%    & = h\left(-\cos(b) + \cos(a)\right)
   \end{split}
 \end{equation*}
 
@@ -257,7 +257,7 @@ where $y \in C^2[0,1].$
     &= \int_0^1 x(y_0')^2dx  + \int_0^1 y_0\sin(y_0' + \epsilon h')\, dx
     + \epsilon\left( 2\int_0^1 y_o' h'\, dx + \int_0 ^1 h\sin(y_0'
       + \epsilon h') dx\right) 
-    + \epsilon^2\int_0^1 (h')^2dx  
+    + \epsilon^2\int_0^1 x(h')^2dx  
 \end{split}
 \end{equation*}
 Now, Let's take the derivatives.
@@ -267,13 +267,13 @@ Now, Let's take the derivatives.
    &= \frac{d}{d\epsilon}\left[  \int_0^1 y_0\sin(y_0' + \epsilon h') dx
     + 2\epsilon \int_0^1 y_o' h'\, dx +\epsilon \int_0 ^1 h\sin(y_0'
       + \epsilon h')\, dx 
-    + \epsilon^2\int_0^1 (h')^2dx  \right]\\
+    + \epsilon^2\int_0^1x (h')^2dx  \right]\\
   &= 2\int_0^1 y_o' h'\, dx +
   \int_0^1 y_0\cos(y_0' + \epsilon h')\cdot h'\, dx
    +  \int_0 ^1 h\sin(y_0'
       + \epsilon h')\, dx\\
   &\quad  + \epsilon\left(\int_0^1 hh'\cos(y_0' +
-      \epsilon h') dx\right) +2\epsilon \int_0^1 (h')^2 dx 
+      \epsilon h') dx\right) +2\epsilon \int_0^1 x(h')^2 dx 
   \end{split}
 \end{equation*}
 
@@ -285,12 +285,12 @@ Now, Let's take the derivatives.
    +  \int_0 ^1 h\sin(y_0'
       + \epsilon h')\, dx \right.\\
   &\quad\left.  + \epsilon\left(\int_0^1 hh'\cos(y_0' +
-      \epsilon h')\, dx\right) +2\epsilon \int_0^1 (h')^2\, dx\right] \\
+      \epsilon h')\, dx\right) +2\epsilon \int_0^1x (h')^2\, dx\right] \\
   &= 0 - \int_0^1 y_0 (h')^2\sin(y_0' + \epsilon h') \,dx + \int_0^1
   hh'\cos(y_0' + \epsilon h')\,dx\\
   &\quad +\int_0^1 hh'\cos(y_0' +
       \epsilon h')\, dx - \epsilon \left(\int_0^1 h(h')^2\sin(y_0' +
-      \epsilon h')\, dx\right) + 2\int_0^1(h')^2\, dx.
+      \epsilon h')\, dx\right) + 2\int_0^1x(h')^2\, dx.
   \end{split}
 \end{equation*}
 Setting $\epsilon = 0$, yields
@@ -298,9 +298,9 @@ Setting $\epsilon = 0$, yields
   \begin{split}
      \left. \frac{d^2}{d\epsilon^2}J(y_0 + \epsilon h)\right|_{\epsilon = 0} &=
  - \int_0^1 y_0 (h')^2\sin(y_0') \,dx + \int_0^1 hh'\cos(y_0')\,dx
- +\int_0^1 hh'\cos(y_0')\, dx + 2\int_0^1(h')^2\, dx\\
+ +\int_0^1 hh'\cos(y_0')\, dx + 2\int_0^1x(h')^2\, dx\\
  &= - \int_0^1 y_0 (h')^2\sin(y_0') \,dx + 2\int_0^1 hh'\cos(y_0')\,dx
-+ 2\int_0^1(h')^2\, dx\\
++ 2\int_0^1x(h')^2\, dx\\
   \end{split}
 \end{equation*}
 
